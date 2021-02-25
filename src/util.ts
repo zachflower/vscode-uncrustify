@@ -71,7 +71,3 @@ export function executablePath(useDefaultValue: boolean = true) {
     const defValue = useDefaultValue ? DEFAULT_PATH : null;
     return config.get('executablePath' + PLATFORM_SUFFIX, defValue) || defValue;
 }
-
-export function configUri() {
-    return vsc.Uri.parse('uncrustify://configuration');
-};

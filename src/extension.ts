@@ -4,7 +4,6 @@ import * as vsc from 'vscode';
 import * as logger from './logger';
 import * as util from './util';
 import Formatter from './formatter';
-import Configurator from './configurator';
 
 let extContext: vsc.ExtensionContext;
 
@@ -18,10 +17,6 @@ export function activate(context: vsc.ExtensionContext) {
     context.subscriptions.push(vsc.languages.registerDocumentRangeFormattingEditProvider(modes, formatter));
     context.subscriptions.push(vsc.languages.registerOnTypeFormattingEditProvider(modes, formatter, ';', '}'));
     logger.dbg('registered formatter for modes: ' + modes);
-
-    let configurator = new Configurator();
-    let configurationSub = vsc.workspace.registerTextDocumentContentProvider('uncrustify', configurator);
-    context.subscriptions.push(configurationSub);
 
     vsc.commands.registerCommand('uncrustify.create', () => {
         logger.dbg('command: create');
@@ -140,7 +135,6 @@ export function activate(context: vsc.ExtensionContext) {
 
         await vsc.commands.executeCommand('uncrustify.create');
         await vsc.commands.executeCommand('uncrustify.save', presets[name]);
-        Configurator.oldConfig = presets[name];
 
         if (!internal) {
             vsc.window.showInformationMessage('Preset loaded !');
@@ -173,33 +167,6 @@ export function activate(context: vsc.ExtensionContext) {
         await vsc.commands.executeCommand('uncrustify.deletePreset', '');
         return await vsc.commands.executeCommand('vscode.open', vsc.Uri.file(util.configPath()));
     });
-
-    if (vsc.workspace.getConfiguration('uncrustify').get('graphicalConfig', true)) {
-        function graphicalEdit(doc: vsc.TextDocument) {
-            if (doc.uri.scheme === 'file' && doc.fileName === util.configPath()) {
-                logger.dbg('launching graphical editor');
-
-                vsc.commands.executeCommand('workbench.action.closeActiveEditor')
-                    .then(async () => {
-                        let webviewPanel = vsc.window.createWebviewPanel(
-                            'uncrustifyConfiguration',
-                            'Uncrustify configuration',
-                            vsc.ViewColumn.Active,
-                            { enableCommandUris: true, enableScripts: true }
-                        );
-
-                        configurator.webview = webviewPanel.webview;
-                        webviewPanel.webview.html = await configurator.provideTextDocumentContent(util.configUri(), null);
-                    });
-            }
-        }
-
-        vsc.workspace.onDidOpenTextDocument(graphicalEdit);
-
-        if (vsc.window.activeTextEditor) {
-            graphicalEdit(vsc.window.activeTextEditor.document);
-        }
-    }
 };
 
 export function deactivate() { };
