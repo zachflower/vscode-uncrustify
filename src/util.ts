@@ -23,7 +23,7 @@ const PLATFORM_NAMES = {
 const PLATFORM_SUFFIX = PLATFORM_NAMES[process.platform];
 
 export function modes() {
-    const overrides = vsc.workspace.getConfiguration('uncrustify').get<Object>('langOverrides', {});
+    const overrides = vsc.workspace.getConfiguration('uncrustify').get<Record<string, unknown>>('langOverrides', {});
     return DEFAULT_MODES.concat(Object.getOwnPropertyNames(overrides));
 }
 
@@ -32,10 +32,10 @@ export function configPath() {
     const textEditors = [vsc.window.activeTextEditor];
     textEditors.push(...vsc.window.visibleTextEditors);
 
-    for (let textEditor of textEditors.filter(e => e)) {
-        let workspace: vsc.WorkspaceFolder;
+    for (const textEditor of textEditors.filter(e => e)) {
+        const workspace: vsc.WorkspaceFolder = vsc.workspace.getWorkspaceFolder(textEditor.document.uri);
 
-        if (workspace = vsc.workspace.getWorkspaceFolder(textEditor.document.uri)) {
+        if (workspace) {
             folderUri = workspace.uri;
             break;
         }
@@ -47,13 +47,13 @@ export function configPath() {
         folderUri = workspaces[0].uri;
     }
 
-    let config = vsc.workspace.getConfiguration('uncrustify', folderUri);
+    const config = vsc.workspace.getConfiguration('uncrustify', folderUri);
     let p = config.get<string>('configPath' + PLATFORM_SUFFIX)
         || path.join(folderUri.fsPath, CONFIG_FILE_NAME);
 
     p = p
         .replace(/(%\w+%)|(\$\w+)/g, variable => {
-            let end = variable.startsWith('%') ? 2 : 1;
+            const end = variable.startsWith('%') ? 2 : 1;
             return process.env[variable.substr(1, variable.length - end)];
         })
         .replace(/\$\{workspaceFolder:(.*?)\}/, (_, name) =>
@@ -66,7 +66,7 @@ export function configPath() {
     return p;
 }
 
-export function executablePath(useDefaultValue: boolean = true) {
+export function executablePath(useDefaultValue = true) {
     const config = vsc.workspace.getConfiguration('uncrustify');
     const defValue = useDefaultValue ? DEFAULT_PATH : null;
     return config.get('executablePath' + PLATFORM_SUFFIX, defValue) || defValue;

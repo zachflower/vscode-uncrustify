@@ -67,7 +67,7 @@ export default class Formatter implements vsc.DocumentFormattingEditProvider,
 
         return await new Promise((resolve, reject) => {
             token.onCancellationRequested(reject);
-            let configPath = util.configPath();
+            const configPath = util.configPath();
             logger.dbg('config file: ' + configPath);
 
             try {
@@ -80,7 +80,7 @@ export default class Formatter implements vsc.DocumentFormattingEditProvider,
                 return;
             }
 
-            let args = ['-l', languageMap[document.languageId], '-c', configPath];
+            const args = ['-l', languageMap[document.languageId], '-c', configPath];
             let output = Buffer.alloc(0);
             let error = '';
 
@@ -109,15 +109,13 @@ export default class Formatter implements vsc.DocumentFormattingEditProvider,
                 } else if (useTempFile) {
                     const result = await u.promisify(fs.readFile)(this.tempFileName);
                     resolve([new vsc.TextEdit(this.getRange(document, range), result.toString())]);
-                } else if (useReplaceOption) {
-                    resolve();
                 }
             });
 
             uncrustify.stdout.on('data', data => output = Buffer.concat([output, Buffer.from(data)]));
             uncrustify.stdout.on('close', () => {
                 if (useDirectFile) {
-                    return
+                    return;
                 }
 
                 const result = output.toString();
@@ -139,11 +137,11 @@ export default class Formatter implements vsc.DocumentFormattingEditProvider,
     }
 
     private getRange(document: vsc.TextDocument, range: vsc.Range): vsc.Range {
-        let lastLine = document.lineCount - 1;
-        let lastCol = document.lineAt(lastLine).text.length;
+        const lastLine = document.lineCount - 1;
+        const lastCol = document.lineAt(lastLine).text.length;
         return range || new vsc.Range(0, 0, lastLine, lastCol);
     }
-};
+}
 
 const langOverrides = vsc.workspace.getConfiguration('uncrustify').get('langOverrides');
 

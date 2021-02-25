@@ -1,14 +1,14 @@
 import * as vsc from 'vscode';
 
-let output: vsc.OutputChannel = vsc.window.createOutputChannel('Uncrustify');
+const output: vsc.OutputChannel = vsc.window.createOutputChannel('Uncrustify');
 
 export function show() {
     output.show(true);
-};
+}
 
 export function hide() {
     output.hide();
-};
+}
 
 export function log(msg: string, line = true) {
     if (line) {
@@ -16,11 +16,11 @@ export function log(msg: string, line = true) {
     } else {
         output.append(msg);
     }
-};
+}
 
 export function dbg(msg: string, line = true) {
     if (vsc.workspace.getConfiguration('uncrustify').get('debug', false)) {
-        let dmsg = 'Debug: ' + msg;
+        const dmsg = 'Debug: ' + msg;
 
         if (line) {
             output.appendLine(dmsg);
@@ -28,4 +28,4 @@ export function dbg(msg: string, line = true) {
             output.append(dmsg);
         }
     }
-};
+}

@@ -11,7 +11,7 @@ export function activate(context: vsc.ExtensionContext) {
     logger.dbg('extension started');
     extContext = context;
 
-    let formatter = new Formatter();
+    const formatter = new Formatter();
     const modes = util.modes();
     context.subscriptions.push(vsc.languages.registerDocumentFormattingEditProvider(modes, formatter));
     context.subscriptions.push(vsc.languages.registerDocumentRangeFormattingEditProvider(modes, formatter));
@@ -26,7 +26,7 @@ export function activate(context: vsc.ExtensionContext) {
         }
 
         let output = '';
-        let error = new Error('Configuration file already exists');
+        const error = new Error('Configuration file already exists');
 
         return fs.access(util.configPath(), fs.constants.F_OK)
             .then(() => vsc.window.showWarningMessage('Configuration file already exists', 'Overwrite')
@@ -80,7 +80,7 @@ export function activate(context: vsc.ExtensionContext) {
 
             let result = data.toString();
 
-            for (let key in config) {
+            for (const key in config) {
                 result = result.replace(new RegExp(`^(${key}\\s*=\\s*)\\S+(.*)`, 'm'), `$1${config[key]}$2`);
             }
 
@@ -106,7 +106,7 @@ export function activate(context: vsc.ExtensionContext) {
             return;
         }
 
-        let promise: Thenable<string> = name !== undefined
+        const promise: Thenable<string> = name !== undefined
             ? Promise.resolve(name)
             : vsc.window.showInputBox({ placeHolder: 'Name of the preset' });
 
@@ -117,7 +117,7 @@ export function activate(context: vsc.ExtensionContext) {
             throw new Error('Name is empty');
         }
 
-        let presets = extContext.globalState.get('presets', {});
+        const presets = extContext.globalState.get('presets', {});
         presets[chosenName] = config;
         logger.dbg('saved preset ' + chosenName);
 
@@ -167,9 +167,11 @@ export function activate(context: vsc.ExtensionContext) {
         await vsc.commands.executeCommand('uncrustify.deletePreset', '');
         return await vsc.commands.executeCommand('vscode.open', vsc.Uri.file(util.configPath()));
     });
-};
+}
 
-export function deactivate() { };
+export function deactivate() {
+    // do nothing
+}
 
 export { extContext };
 
@@ -177,10 +179,10 @@ function presetCommand(commandName: string, callback: (presets: any, name: strin
     vsc.commands.registerCommand('uncrustify.' + commandName, async name => {
         logger.dbg('command: ' + commandName);
 
-        let presets = extContext.globalState.get('presets', {});
-        let names: string[] = [];
+        const presets = extContext.globalState.get('presets', {});
+        const names: string[] = [];
 
-        for (let name in presets) {
+        for (const name in presets) {
             names.push(name);
         }
 
@@ -189,7 +191,7 @@ function presetCommand(commandName: string, callback: (presets: any, name: strin
             return;
         }
 
-        let promise: Thenable<string> = name !== undefined
+        const promise: Thenable<string> = name !== undefined
             ? Promise.resolve(name)
             : vsc.window.showQuickPick(names);
 
