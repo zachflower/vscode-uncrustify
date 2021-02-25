@@ -3,9 +3,9 @@
     "displayName": "Uncrustify",
     "description": "Code format using uncrustify",
     "version": "2.20.6",
-    "publisher": "LaurentTreguier",
+    "publisher": "zachflower",
     "license": "MIT",
-    "homepage": "https://github.com/LaurentTreguier/vscode-uncrustify",
+    "homepage": "https://github.com/zachflower/vscode-uncrustify",
     "icon": "images/uncrustify.png",
     "galleryBanner": {
         "color": "#1F1F1F",
@@ -13,10 +13,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/LaurentTreguier/vscode-uncrustify.git"
+        "url": "https://github.com/zachflower/vscode-uncrustify.git"
     },
     "bugs": {
-        "url": "https://github.com/LaurentTreguier/vscode-uncrustify/issues"
+        "url": "https://github.com/zachflower/vscode-uncrustify/issues"
     },
     "engines": {
         "vscode": "^1.47.0"
@@ -93,12 +93,6 @@
                     "description": "Path to the uncrustify configuration file (Windows)",
                     "scope": "resource"
                 },
-                "uncrustify.graphicalConfig": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Toggles the graphical config editor",
-                    "scope": "window"
-                },
                 "uncrustify.debug": {
                     "type": "boolean",
                     "default": false,
@@ -116,7 +110,7 @@
                 },
                 "uncrustify.useTempFile": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Uses a temporary file to bypass VSCode's document handling",
                     "scope": "resource"
                 },
@@ -167,9 +161,12 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "webpack --mode production",
-        "compile": "webpack --mode none",
-        "watch": "webpack --mode none --watch"
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+        "lint": "eslint . --ext .ts,.tsx",
+		"watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
     },
     "dependencies": {
         "fs-extra": "^9.0.1",
@@ -181,12 +178,14 @@
         "@types/node": "^12.12.53",
         "@types/temp": "^0.8.34",
         "@types/vscode": "^1.47.0",
-        "@types/webpack": "^4.41.21",
+        "@types/mocha": "^5.2.6",
+        "@typescript-eslint/eslint-plugin": "^3.0.2",
+        "@typescript-eslint/parser": "^3.0.2",
         "ts-loader": "^8.0.1",
         "ts-node": "^8.10.2",
+        "eslint": "^7.1.0",
         "typescript": "^3.9.7",
         "vsce": "^1.77.0",
-        "webpack": "^4.44.0",
-        "webpack-cli": "^3.3.12"
+        "vscode-test": "^1.3.0"
     }
 }
