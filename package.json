@@ -2,7 +2,7 @@
     "name": "uncrustify",
     "displayName": "Uncrustify",
     "description": "Code format using uncrustify",
-    "version": "2.20.6",
+    "version": "3.0.0",
     "publisher": "zachflower",
     "license": "MIT",
     "homepage": "https://github.com/zachflower/vscode-uncrustify",
@@ -143,10 +143,10 @@
         ]
     },
     "scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
         "lint": "eslint . --ext .ts,.tsx",
-		"watch": "tsc -watch -p ./",
+        "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
         "test": "node ./out/test/runTest.js"
     },
