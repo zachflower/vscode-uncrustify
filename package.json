@@ -39,58 +39,40 @@
         "configuration": {
             "title": "Uncrustify",
             "properties": {
-                "uncrustify.executablePath.linux": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify executable (Linux)",
+                "uncrustify.executablePath": {
+                    "type": "string",
+                    "default": "uncrustify",
+                    "description": "Uncrustify executable name or path",
                     "scope": "window"
                 },
                 "uncrustify.executablePath.osx": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify executable (macOS)",
+                    "type": "string",
+                    "default": "uncrustify",
+                    "description": "Uncrustify executable name or path (macOS)",
                     "scope": "window"
                 },
                 "uncrustify.executablePath.windows": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify executable (Windows)",
+                    "type": "string",
+                    "default": "uncrustify.exe",
+                    "description": "Uncrustify executable name or path (Windows)",
                     "scope": "window"
                 },
                 "uncrustify.configPath.linux": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify configuration file (Linux)",
+                    "type": "string",
+                    "default": "uncrustify.cfg",
+                    "description": "Path to the uncrustify configuration file relative to the workspace root (Linux)",
                     "scope": "resource"
                 },
                 "uncrustify.configPath.osx": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify configuration file (macOS)",
+                    "type": "string",
+                    "default": "uncrustify.cfg",
+                    "description": "Path to the uncrustify configuration file relative to the workspace root (macOS)",
                     "scope": "resource"
                 },
                 "uncrustify.configPath.windows": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "Path to the uncrustify configuration file (Windows)",
+                    "type": "string",
+                    "default": "uncrustify.cfg",
+                    "description": "Path to the uncrustify configuration file relative to the workspace root (Windows)",
                     "scope": "resource"
                 },
                 "uncrustify.debug": {
