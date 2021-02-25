@@ -84,7 +84,7 @@ export function activate(context: vsc.ExtensionContext) {
                 result = result.replace(new RegExp(`^(${key}\\s*=\\s*)\\S+(.*)`, 'm'), `$1${config[key]}$2`);
             }
 
-            return await new Promise((resolve, reject) => fs.writeFile(util.configPath(), result, err => {
+            return await new Promise<void>((resolve, reject) => fs.writeFile(util.configPath(), result, err => {
                 if (err) {
                     reject(err);
                 }
