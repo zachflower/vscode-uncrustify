@@ -27,16 +27,6 @@ If the executable is not in the PATH environment variable, you must set its path
 
 A default config file can automatically be created (see the [commands](#extension-commands) below).
 
-Starting with version 2.0.0, opening the configured config file (or a file named `uncrustify.cfg` at the root of your workspace if it's not configured) will display a graphical editor to easily tweak the configuration file.
-
-![configuration image](https://raw.githubusercontent.com/LaurentTreguier/vscode-uncrustify/master/images/screenshot.png)
-
-The graphical editor can be disabled in the [extension settings](#extension-settings).
-Uncrustify's default config file keeps its version at the top of the file; if that version differs from the version of the uncrustify executable then a button will be available to upgrade the config file to the newer version. New items will be marked as such when using the graphical editor.
-
-![configuration upgrade image](https://raw.githubusercontent.com/LaurentTreguier/vscode-uncrustify/master/images/screenshot-upgrade.png)
-![configuration new items image](https://raw.githubusercontent.com/LaurentTreguier/vscode-uncrustify/master/images/screenshot-new-items.png)
-
 ## Extension commands
 
 * `Uncrustify: Create default config file` (`uncrustify.create`): Creates a default `uncrustify.cfg` file and puts it at the root of the current workspace.
@@ -50,6 +40,6 @@ Uncrustify's default config file keeps its version at the top of the file; if th
 * `uncrustify.debug` (`boolean`): Activates logs for debugging the extension. Logs should appear in the uncrustify output channel.
 * `uncrustify.langOverrides` (`object`): Overrides the language used by uncrustify.
 
-## Changelog
+## Acknowledgements
 
-See CHANGELOG.md
+This extension was originally created and maintained by [@LaurentTreguier](https://github.com/LaurentTreguier). While it has since been archived and removed from the extension marketplace, I have relied heavily on it over the past few years and have chosen to resurrect it. To that end, any of the good stuff in this extension undoubtedly comes from the original maintainer's hard work, and I will do my best to honor that.
