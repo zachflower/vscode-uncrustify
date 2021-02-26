@@ -39,7 +39,7 @@
         "configuration": {
             "title": "Uncrustify",
             "properties": {
-                "uncrustify.executablePath": {
+                "uncrustify.executablePath.linux": {
                     "type": "string",
                     "default": "uncrustify",
                     "description": "Uncrustify executable name or path",
