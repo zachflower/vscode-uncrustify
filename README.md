@@ -1,6 +1,8 @@
-# VSCode uncrustify
+# Uncrustify Formatter for Visual Studio Code
 
-[![.github/workflows/vscode.yml](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml/badge.svg)](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml)
+[![.github/workflows/vscode.yml](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml/badge.svg?branch=main)](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml)
+[![VS Code Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/zachflower.uncrustify)](https://marketplace.visualstudio.com/items?itemName=zachflower.uncrustify)
+[![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/zachflower.uncrustify)](https://marketplace.visualstudio.com/items?itemName=zachflower.uncrustify)
 
 [Uncrustify](https://github.com/uncrustify/uncrustify) is a highly configurable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA.
 
