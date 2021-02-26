@@ -1,8 +1,8 @@
 import * as path from 'path';
 import * as vsc from 'vscode';
 
-export const CONFIG_FILE_NAME = 'uncrustify.cfg';
-
+const DEFAULT_CONFIG_FILE_NAME = 'uncrustify.cfg';
+const DEFAULT_PATH = 'uncrustify';
 const DEFAULT_MODES = [
     'c',
     'cpp',
@@ -14,51 +14,53 @@ const DEFAULT_MODES = [
     'pde',
     'vala'
 ];
-const DEFAULT_PATH = 'uncrustify';
-const PLATFORM_NAMES = {
+
+const SUPPORTED_PLATFORM_NAMES = {
     'linux': '.linux',
     'darwin': '.osx',
     'win32': '.windows'
 };
-const PLATFORM_SUFFIX = PLATFORM_NAMES[process.platform];
 
-export function modes() {
-    const overrides = vsc.workspace.getConfiguration('uncrustify').get<Record<string, unknown>>('langOverrides', {});
+/**
+ * Retrieves the uncrustify language settings.
+ *
+ * @return Array of default language modes and any configured overrides.
+ */
+export function modes() : Array<string> {
+    const config = getExtensionConfig();
+    const overrides = config.get<Record<string, unknown>>('langOverrides', {});
+
     return DEFAULT_MODES.concat(Object.getOwnPropertyNames(overrides));
 }
 
-export function configPath() {
-    let folderUri: vsc.Uri;
-    const textEditors = [vsc.window.activeTextEditor];
-    textEditors.push(...vsc.window.visibleTextEditors);
+/**
+ * Retrieves the configured path to the `uncrustify` configuration file.
+ *
+ * @return An absolute path to an `uncrustify` configuration file.
+ */
+export function configPath() : string {
+    const folderUri = getWorkspacePath();
+    const config = getExtensionConfig(folderUri);
 
-    for (const textEditor of textEditors.filter(e => e)) {
-        const workspace: vsc.WorkspaceFolder = vsc.workspace.getWorkspaceFolder(textEditor.document.uri);
+    let p = config.get<string>(`configPath${getPlatformSuffix()}`, DEFAULT_CONFIG_FILE_NAME);
 
-        if (workspace) {
-            folderUri = workspace.uri;
-            break;
-        }
-    }
+    // interpret environment variables
+    p = p.replace(/(%\w+%)|(\$\w+)/g, variable => {
+        const end = variable.startsWith('%') ? 2 : 1;
+        return process.env[variable.substr(1, variable.length - end)];
+    });
 
-    const workspaces = vsc.workspace.workspaceFolders || [];
+    // interpret ${workspaceFolder} variable
+    p = p.replace(/\$\{workspaceFolder\}/, (_, name) => {
+        return folderUri.fsPath;
+    });
 
-    if (!folderUri && workspaces.length > 0) {
-        folderUri = workspaces[0].uri;
-    }
+    // interpret ${workspaceFolder:<folder>} variables
+    p = p.replace(/\$\{workspaceFolder:(.*?)\}/, (_, name) => {
+        return vsc.workspace.workspaceFolders.find(wf => wf.name == name).uri.fsPath;
+    });
 
-    const config = vsc.workspace.getConfiguration('uncrustify', folderUri);
-    let p = config.get<string>('configPath' + PLATFORM_SUFFIX)
-        || path.join(folderUri.fsPath, CONFIG_FILE_NAME);
-
-    p = p
-        .replace(/(%\w+%)|(\$\w+)/g, variable => {
-            const end = variable.startsWith('%') ? 2 : 1;
-            return process.env[variable.substr(1, variable.length - end)];
-        })
-        .replace(/\$\{workspaceFolder:(.*?)\}/, (_, name) =>
-            vsc.workspace.workspaceFolders.find(wf => wf.name == name).uri.fsPath);
-
+    // prefix relative paths with the detected workspace folder
     if (!path.isAbsolute(p)) {
         p = path.join(folderUri.fsPath, p);
     }
@@ -66,8 +68,66 @@ export function configPath() {
     return p;
 }
 
-export function executablePath(useDefaultValue = true) {
-    const config = vsc.workspace.getConfiguration('uncrustify');
-    const defValue = useDefaultValue ? DEFAULT_PATH : null;
-    return config.get('executablePath' + PLATFORM_SUFFIX, defValue) || defValue;
+/**
+ * Retrieves the configured `uncrustify` executable path.
+ *
+ * @return The path or name of the `uncrustify` executable.
+ */
+export function executablePath() : string {
+    const config = getExtensionConfig();
+
+    return config.get<string>(`executablePath${getPlatformSuffix()}`, DEFAULT_PATH);
+}
+
+/**
+ * Determines the workspace path relative to the currently open document, or the
+ * first workspace found.
+ *
+ * @return A workspace folder.
+ */
+export function getWorkspacePath() : vsc.Uri {
+    let folderUri: vsc.Uri;
+    const workspaces = vsc.workspace.workspaceFolders || [];
+    const textEditors = [vsc.window.activeTextEditor];
+
+    if (workspaces.length === 0) {
+        return folderUri;
+    }
+
+    textEditors.push(...vsc.window.visibleTextEditors);
+
+    // if there is a document open in the editor, use its workspace folder
+    for (const textEditor of textEditors.filter(e => e)) {
+        const workspace: vsc.WorkspaceFolder = vsc.workspace.getWorkspaceFolder(textEditor.document.uri);
+
+        if (workspace) {
+            return workspace.uri;
+        }
+    }
+
+    return workspaces[0].uri;
+}
+
+/**
+ * Retrieves the extension configuration object for the `uncrustify` extension
+ *
+ * @param folderUri A scope for which the configuration is asked for.
+ *
+ * @return The `uncrustify` extension configuration object
+ */
+export function getExtensionConfig(folderUri?: vsc.Uri) : vsc.WorkspaceConfiguration {
+    if (!folderUri) {
+        folderUri = getWorkspacePath();
+    }
+
+    return vsc.workspace.getConfiguration('uncrustify', folderUri);
+}
+
+/**
+ * Retrieves the configuration suffix for the current platform
+ *
+ * @return The platform configuration suffix
+ */
+export function getPlatformSuffix() : string {
+    return SUPPORTED_PLATFORM_NAMES[process.platform];
 }
