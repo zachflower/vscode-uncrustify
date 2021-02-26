@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "linux"
+    },
+    {
+      "path": "windows"
+    }
+  ],
+  "settings": {
+    "editor.defaultFormatter": "zachflower.uncrustify",
+    "[c]": {
+      "editor.defaultFormatter": "zachflower.uncrustify"
+    },
+    "uncrustify.configPath.linux": "uncrustify.cfg",
+    "uncrustify.configPath.windows": "uncrustify.cfg",
+    "uncrustify.configPath.macos": "uncrustify.cfg",
+  }
+}
