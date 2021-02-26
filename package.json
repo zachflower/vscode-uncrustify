@@ -2,7 +2,7 @@
     "name": "uncrustify",
     "displayName": "Uncrustify",
     "description": "Code format using uncrustify",
-    "version": "3.0.1",
+    "version": "3.1.0",
     "publisher": "zachflower",
     "license": "MIT",
     "homepage": "https://github.com/zachflower/vscode-uncrustify",
