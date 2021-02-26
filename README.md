@@ -1,19 +1,8 @@
 # VSCode uncrustify
 
-## Features
+[![.github/workflows/vscode.yml](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml/badge.svg)](https://github.com/zachflower/vscode-uncrustify/actions/workflows/vscode.yml)
 
-Formats your code using [uncrustify](https://github.com/uncrustify/uncrustify).
-Supported languages are :
-- C
-- C++
-- C#
-- D
-- Java
-- Objective-C
-- Pawn
-- Vala
-
-Apex, while not officially supported by uncrustify, is also partially supported by the extension and will be formatted as if it was Java.
+[Uncrustify](https://github.com/uncrustify/uncrustify) is a highly configurable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA.
 
 ## Installing uncrustify
 
