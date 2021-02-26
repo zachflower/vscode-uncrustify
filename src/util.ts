@@ -116,18 +116,16 @@ export function getWorkspacePath() : vsc.Uri {
  * @return The `uncrustify` extension configuration object
  */
 export function getExtensionConfig(folderUri?: vsc.Uri) : vsc.WorkspaceConfiguration {
-    if (!folderUri) {
-        folderUri = getWorkspacePath();
-    }
-
-    return vsc.workspace.getConfiguration('uncrustify', folderUri);
+    return vsc.workspace.getConfiguration('uncrustify', folderUri ?? getWorkspacePath());
 }
 
 /**
  * Retrieves the configuration suffix for the current platform
  *
+ * @param platform The platform to retrieve the platform suffix for
+ *
  * @return The platform configuration suffix
  */
-export function getPlatformSuffix() : string {
-    return SUPPORTED_PLATFORM_NAMES[process.platform];
+export function getPlatformSuffix(platform?: string) : string {
+    return SUPPORTED_PLATFORM_NAMES[platform ?? process.platform];
 }
