@@ -74,9 +74,26 @@ export function configPath() : string {
  * @return The path or name of the `uncrustify` executable.
  */
 export function executablePath() : string {
-    const config = getExtensionConfig();
+    const folderUri = getWorkspacePath();
+    const config = getExtensionConfig(folderUri);
+        
+    let execPath = config.get<string>(`executablePath${getPlatformSuffix()}`, DEFAULT_PATH);
+    
+    execPath = execPath.replace(/\$\{workspaceFolder\}/, (_, name) => {
+        return folderUri.fsPath;
+    });
 
-    return config.get<string>(`executablePath${getPlatformSuffix()}`, DEFAULT_PATH);
+    // interpret ${workspaceFolder:<folder>} variables
+    execPath = execPath.replace(/\$\{workspaceFolder:(.*?)\}/, (_, name) => {
+        return vsc.workspace.workspaceFolders.find(wf => wf.name == name).uri.fsPath;
+    });
+
+    // prefix relative paths with the detected workspace folder
+    if (!path.isAbsolute(execPath)) {
+        execPath = path.join(folderUri.fsPath, execPath);
+    }
+
+    return execPath;
 }
 
 /**
